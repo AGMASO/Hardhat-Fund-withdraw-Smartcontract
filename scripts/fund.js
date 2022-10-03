@@ -1,0 +1,23 @@
+const { getNamedAccounts, ethers } = require("hardhat");
+let deployer;
+async function main() {
+  deployer = (await getNamedAccounts()).deployer;
+  const fundMe = await ethers.getContract("FundMe", deployer);
+  console.log("Funding Contract...");
+  const transactionResponse = await fundMe.fund({
+    value: ethers.utils.parseEther("0.1"),
+  });
+  await transactionResponse.wait(1);
+
+  console.log("Funded");
+}
+
+/*----------------------------------------------------------------------------------------------------------------------*/
+//Main
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
